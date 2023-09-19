@@ -1,8 +1,8 @@
-package orbalance.commands;
+package com.github.furkanzhlp.orbalance.commands;
 
-import orbalance.OrbalancePlugin;
-import orbalance.player.PlayerData;
-import orbalance.utils.Utils;
+import com.github.furkanzhlp.orbalance.OrbalancePlugin;
+import com.github.furkanzhlp.orbalance.player.PlayerData;
+import com.github.furkanzhlp.orbalance.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,6 +26,8 @@ public class BalanceCommand implements CommandExecutor {
                     player.sendMessage(Utils.getMessage("balance")
                             .replace("%balance%",Utils.formatNumber(playerData.getBalance())));
                 }else{
+                    //Load player's data if is not loaded.
+                    plugin.getPlayerDataManager().loadPlayerData(player.getUniqueId());
                     player.sendMessage(Utils.getMessage("error"));
                 }
             }else{
@@ -38,6 +40,8 @@ public class BalanceCommand implements CommandExecutor {
                                 .replace("%target%",targetPlayer.getName())
                                 .replace("%balance%",Utils.formatNumber(playerData.getBalance())));
                     }else{
+                        //Load player's data if is not loaded.
+                        plugin.getPlayerDataManager().loadPlayerData(targetPlayer.getUniqueId());
                         player.sendMessage(Utils.getMessage("target-error"));
                     }
                 }else{

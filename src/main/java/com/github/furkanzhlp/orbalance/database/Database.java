@@ -1,4 +1,4 @@
-package com.github.furkanzhlp.orbalance;
+package com.github.furkanzhlp.orbalance.database;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -57,49 +57,38 @@ public class Database {
     }
 
     public Connection getConnection() {
+        try {
+            if (!this.connection.isValid(1)) {
+                try {
+                    this.openConnection();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (SQLException e2) {
+            e2.printStackTrace();
+        }
+        try (PreparedStatement stmt = this.connection.prepareStatement("SELECT 1")) {
+            stmt.executeQuery();
+        }
+        catch (SQLException e2) {
+            try {
+                this.openConnection();
+            }
+            catch (Exception e3) {
+                e3.printStackTrace();
+            }
+        }
         return this.connection;
     }
 
     public void setConnection(final Connection connection) {
         this.connection = connection;
     }
-    public Double getBalance(UUID uuid){
-        try (Connection connection = getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+table+" WHERE player_uuid = ?");
-            preparedStatement.setString(1, uuid.toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getDouble("balance");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0.0;
+
+    public String getTable() {
+        return table;
     }
-
-    public void saveBalance(UUID uuid, double balance) {
-        try (Connection connection = getConnection()) {
-            // Check if player data exists
-            PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM " + table + " WHERE player_uuid = ?");
-            selectStatement.setString(1, uuid.toString());
-            ResultSet resultSet = selectStatement.executeQuery();
-            if (resultSet.next()) {
-                // Player data exists, so update it
-                PreparedStatement updateStatement = connection.prepareStatement("UPDATE " + table + " SET balance = ? WHERE player_uuid = ?");
-                updateStatement.setDouble(1, balance);
-                updateStatement.setString(2, uuid.toString());
-                updateStatement.executeUpdate();
-            } else {
-                // Player data doesn't exist, so insert it
-                PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO " + table + " (player_uuid, balance) VALUES (?, ?)");
-                insertStatement.setString(1, uuid.toString());
-                insertStatement.setDouble(2, balance);
-                insertStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

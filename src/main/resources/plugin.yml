@@ -1,0 +1,15 @@
+name: Orbalance
+description: Simple balance plugin
+main: com.github.furkanzhlp.orbalance.OrbalancePlugin
+version: ${project.version}
+api-version: 1.16
+
+commands:
+  bal:
+    description: "Check your own balance or a player's balance."
+  givebal:
+    description: "Send money from your own balance to another player."
+  setbal:
+    description: "Set a player's balance."
+  earn:
+    description: "Earn random money."

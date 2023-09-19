@@ -9,15 +9,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SetBalanceCommand implements CommandExecutor {
+public class GiveBalanceCommand implements CommandExecutor {
     private final OrbalancePlugin plugin;
-    public SetBalanceCommand(OrbalancePlugin plugin) {
+    public GiveBalanceCommand(OrbalancePlugin plugin) {
         this.plugin = plugin;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        if(!(sender instanceof Player)){
+            sender.sendMessage(Utils.getMessage("player-use-only:"));
+            return true;
+        }
+        Player player = (Player) sender;
         if(args.length < 2){
-            sender.sendMessage(Utils.getMessage("set-balance-usage"));
+            sender.sendMessage(Utils.getMessage("give-balance-usage"));
             return true;
         }
         String targetPlayerName = args[0];
@@ -30,18 +35,31 @@ public class SetBalanceCommand implements CommandExecutor {
             sender.sendMessage(Utils.getMessage("invalid-number"));
             return true;
         }
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(targetPlayer.getUniqueId());
-        if(playerData == null){
+        if(player.getName().equalsIgnoreCase(targetPlayerName)){
+            sender.sendMessage(Utils.getMessage("give-balance-own"));
+            return true;
+        }
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player.getUniqueId());
+        PlayerData targetPlayerData = plugin.getPlayerDataManager().getPlayerData(targetPlayer.getUniqueId());
+        if(playerData == null || targetPlayerData == null){
             //Load player's data if is not loaded.
+            plugin.getPlayerDataManager().loadPlayerData(player.getUniqueId());
             plugin.getPlayerDataManager().loadPlayerData(targetPlayer.getUniqueId());
             sender.sendMessage(Utils.getMessage("error"));
             return true;
         }
-        playerData.setBalance(Double.parseDouble(args[1]));
-        sender.sendMessage(Utils.getMessage("set-balance")
+        Double amount = Double.parseDouble(args[1]);
+
+        if(playerData.getBalance() < amount){
+            player.sendMessage(Utils.getMessage("give-balance-not-enough"));
+            return true;
+        }
+        playerData.removeBalance(amount);
+        targetPlayerData.addBalance(amount);
+        sender.sendMessage(Utils.getMessage("give-balance")
                 .replace("%target%",targetPlayer.getName())
                 .replace("%value%",Utils.formatNumber(Double.parseDouble(args[1]))));
-        targetPlayer.sendMessage(Utils.getMessage("set-balance-target").replace("%player%",sender.getName())
+        targetPlayer.sendMessage(Utils.getMessage("give-balance-target").replace("%player%",sender.getName())
                 .replace("%value%",Utils.formatNumber(Double.parseDouble(args[1]))));
 
         return true;

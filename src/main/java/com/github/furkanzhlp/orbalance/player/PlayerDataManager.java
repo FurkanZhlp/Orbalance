@@ -1,9 +1,9 @@
-package orbalance.player;
+package com.github.furkanzhlp.orbalance.player;
 
-import orbalance.OrbalancePlugin;
-import orbalance.utils.Utils;
+import com.github.furkanzhlp.orbalance.OrbalancePlugin;
+import com.github.furkanzhlp.orbalance.database.DatabaseHandler;
+import com.github.furkanzhlp.orbalance.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -16,13 +16,10 @@ public class PlayerDataManager {
     public PlayerDataManager(OrbalancePlugin plugin){
         Utils.log("PlayerDataManager loading...");
         this.plugin = plugin;
-        for(Player player : Bukkit.getOnlinePlayers()){
-            loadPlayerData(player.getUniqueId());
-        }
     }
     public void loadPlayerData(UUID uuid){
         if(playerList.containsKey(uuid)) return;
-        PlayerData playerData = new PlayerData(uuid,plugin.getDatabase().getBalance(uuid));
+        PlayerData playerData = new PlayerData(uuid,  DatabaseHandler.getBalance(uuid));
         playerList.put(uuid,playerData);
     }
     public void unloadPlayerData(UUID uuid){
@@ -33,12 +30,20 @@ public class PlayerDataManager {
     public void savePlayerData(UUID uuid){
         if(!playerList.containsKey(uuid)) return;
         PlayerData playerData = playerList.get(uuid);
-        plugin.getDatabase().saveBalance(playerData.getPlayerUUID(),playerData.getBalance());
+        DatabaseHandler.saveBalance(playerData.getPlayerUUID(),playerData.getBalance());
     }
 
     public PlayerData getPlayerData(UUID uuid){
         if(!playerList.containsKey(uuid)) return null;
         return playerList.get(uuid);
+    }
+
+
+    public void onEnable(){
+        Bukkit.getOnlinePlayers().forEach(player -> loadPlayerData(player.getUniqueId()));
+    }
+    public void onDisable(){
+        playerList.keySet().forEach(this::savePlayerData);
     }
 
 

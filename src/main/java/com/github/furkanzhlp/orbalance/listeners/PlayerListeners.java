@@ -1,6 +1,6 @@
-package orbalance.listeners;
+package com.github.furkanzhlp.orbalance.listeners;
 
-import orbalance.OrbalancePlugin;
+import com.github.furkanzhlp.orbalance.OrbalancePlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

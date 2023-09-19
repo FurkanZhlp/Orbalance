@@ -1,12 +1,11 @@
-package orbalance.utils;
+package com.github.furkanzhlp.orbalance.utils;
 
-import orbalance.OrbalancePlugin;
+import com.github.furkanzhlp.orbalance.OrbalancePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Locale;
 
 public class Utils {
     private static final NumberFormat nf = NumberFormat.getInstance();
@@ -23,6 +22,14 @@ public class Utils {
     public static String formatNumber(Double number){
         nf.setMaximumFractionDigits(2);
         return nf.format(number);
+    }
+    public static boolean isDouble(String number){
+        try {
+            Double.parseDouble(number);
+            return true;
+        }catch (NumberFormatException e){
+            return false;
+        }
     }
 
     public static void log(String log){

@@ -1,4 +1,4 @@
-package orbalance.player;
+package com.github.furkanzhlp.orbalance.player;
 
 import java.util.UUID;
 

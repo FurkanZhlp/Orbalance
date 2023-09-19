@@ -1,0 +1,36 @@
+
+
+#It's not advisable to use the same table on difficult servers.
+database:
+  host: localhost
+  port: 3306
+  username: server
+  password: password
+  database: server
+  table: orbalance_balances
+
+  #If you want to use it on difficult servers, you can change the table name, for example, from 'skyblock_balances' to 'oneblock_balances'.
+  table_name: "orbalance_balances"
+
+messages:
+  no-permission: "&6Orbalance &8» &cYou dont have permission."
+  player-use-only: "&cThis command only executable by player."
+  balance: "&6Orbalance &8» &eYour balance: &a%balance% $"
+  target-balance: "&6Orbalance &8» &e%target%'s balance: &a%balance% $"
+  not-online: "&6Orbalance &8» &cTarget player is not online. (%target%)"
+  target-error: "&6Orbalance &8» &cThere was a problem with checking the player's balance."
+  error: "&6Orbalance &8» &cThere was a problem with checking the balance. Please try again."
+  invalid-number: "&6Orbalance &8» &cPlease enter a valid number."
+
+  set-balance-usage: "&6Orbalance &8» &6Usage: &e/setbal <player> <value>"
+  set-balance: "&6Orbalance &8» &7You set &e%target%&7's balance to &a%value%$"
+  set-balance-target: "&6Orbalance &8» &7Your balance was changed to &a%value%$ &7by &e%player%"
+
+  give-balance-usage: "&6Orbalance &8» &6Usage: &e/setbal <player> <value>"
+  give-balance: "&6Orbalance &8» &7You give &a%value%$ to &e%target%"
+  give-balance-own: "&6Orbalance &8» &cYou cannot send money to yourself."
+  give-balance-target: "&6Orbalance &8» &7You got &a%value%$ &7from &e%player%"
+  give-balance-not-enough: "&6Orbalance &8» &cYou don't have enough money to send."
+
+  earn-command: "&6Orbalance &8» &7You earn &a%value%$"
+  earn-command-cooldown: "&6Orbalance &8» &7You have to wait &e%seconds% seconds &7before use again."
